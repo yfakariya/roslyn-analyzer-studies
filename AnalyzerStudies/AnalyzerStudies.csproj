@@ -13,15 +13,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Utilities\Refactoring\**" />
-    <Compile Remove="Utilities\Workspaces\**" />
-    <Compile Remove="Utilities_\**" />
-    <EmbeddedResource Remove="Utilities\Refactoring\**" />
-    <EmbeddedResource Remove="Utilities\Workspaces\**" />
-    <EmbeddedResource Remove="Utilities_\**" />
-    <None Remove="Utilities\Refactoring\**" />
-    <None Remove="Utilities\Workspaces\**" />
-    <None Remove="Utilities_\**" />
   </ItemGroup>
 
   <ItemGroup>

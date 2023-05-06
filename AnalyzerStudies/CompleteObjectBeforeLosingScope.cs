@@ -160,14 +160,14 @@ public abstract class CompleteObjectBeforeLosingScope : DiagnosticAnalyzer
 				// and also check that we are not passing delegate type argument which can
 				// be a lambda or local function that has access to target object in current method's scope.
 
-				if (CanBeDisposable(invokedMethod.ReturnType))
+				if (CanBeCompleted(invokedMethod.ReturnType))
 				{
 					return false;
 				}
 
 				foreach (var p in invokedMethod.Parameters)
 				{
-					if (CanBeDisposable(p.Type))
+					if (CanBeCompleted(p.Type))
 					{
 						return false;
 					}
@@ -176,7 +176,7 @@ public abstract class CompleteObjectBeforeLosingScope : DiagnosticAnalyzer
 				return true;
 
 				// Nested local functions.
-				bool CanBeDisposable(ITypeSymbol type)
+				bool CanBeCompleted(ITypeSymbol type)
 					=> type.SpecialType == SpecialType.System_Object ||
 						type.DerivesFrom(completeOnNormalPathAnalysisHelper!.TargetType) ||
 						type.TypeKind == TypeKind.Delegate;

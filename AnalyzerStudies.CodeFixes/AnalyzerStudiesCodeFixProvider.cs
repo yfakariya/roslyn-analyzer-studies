@@ -1,4 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
@@ -20,7 +20,8 @@ namespace AnalyzerStudies
     {
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
-            get { return ImmutableArray.Create(AnalyzerStudiesAnalyzer.DiagnosticId); }
+            //get { return ImmutableArray.Create(AnalyzerStudiesAnalyzer.DiagnosticId); }
+			get => throw new NotImplementedException();
         }
 
         public sealed override FixAllProvider GetFixAllProvider()
