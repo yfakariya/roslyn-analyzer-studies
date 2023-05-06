@@ -52,33 +52,53 @@ public abstract class CompleteObjectBeforeLosingScope : DiagnosticAnalyzer
 
 		_localizableTitle = CreateLocalizableResourceString(nameof(CompleteObjectsBeforeLosingScopeTitle), targetTypeFullName, completeMethodName);
 		_localizableDescription = CreateLocalizableResourceString(nameof(CompleteObjectsBeforeLosingScopeDescription), targetTypeFullName, completeMethodName);
-
-		NotCompletedRule =
-			DiagnosticDescriptorHelper.Create(
-				ruleId,
-				_localizableTitle,
-				CreateLocalizableResourceString(nameof(CompleteObjectsBeforeLosingScopeNotCompletedMessage), targetTypeFullName, completeMethodName),
-				DiagnosticCategory.Reliability,
-				RuleLevel.Disabled,
-				description: _localizableDescription,
-				isPortedFxCopRule: true,
-				isDataflowRule: true
-			);
-
-		MayBeCompletedRule =
-			DiagnosticDescriptorHelper.Create(
-				ruleId,
-				_localizableTitle,
-				CreateLocalizableResourceString(nameof(CompleteObjectsBeforeLosingScopeNotCompletedMessage), targetTypeFullName, completeMethodName),
-				DiagnosticCategory.Reliability,
-				RuleLevel.Disabled,
-				description: _localizableDescription,
-				isPortedFxCopRule: true,
-				isDataflowRule: true
-			);
+		NotCompletedRule = CreateNotCompatibleRule(ruleId, targetTypeFullName, completeMethodName, _localizableTitle, _localizableDescription);
+		MayBeCompletedRule = CreateMayBeCompletedRule(ruleId, targetTypeFullName, completeMethodName, _localizableTitle, _localizableDescription);
 
 		SupportedDiagnostics = ImmutableArray.Create(NotCompletedRule, MayBeCompletedRule);
 	}
+
+	internal static DiagnosticDescriptor CreateNotCompatibleRule(string ruleId, string targetTypeFullName, string completeMethodName) =>
+		CreateNotCompatibleRule(
+			ruleId,
+			targetTypeFullName,
+			completeMethodName,
+			CreateLocalizableResourceString(nameof(CompleteObjectsBeforeLosingScopeTitle), targetTypeFullName, completeMethodName),
+			CreateLocalizableResourceString(nameof(CompleteObjectsBeforeLosingScopeDescription), targetTypeFullName, completeMethodName)
+		);
+
+	private static DiagnosticDescriptor CreateNotCompatibleRule(string ruleId, string targetTypeFullName, string completeMethodName, LocalizableString title, LocalizableString description) =>
+							DiagnosticDescriptorHelper.Create(
+					ruleId,
+					title,
+					CreateLocalizableResourceString(nameof(CompleteObjectsBeforeLosingScopeNotCompletedMessage), targetTypeFullName, completeMethodName),
+					DiagnosticCategory.Reliability,
+					RuleLevel.Disabled,
+					description: description,
+					isPortedFxCopRule: true,
+					isDataflowRule: true
+				);
+
+	internal static DiagnosticDescriptor CreateMayBeCompletedRule(string ruleId, string targetTypeFullName, string completeMethodName) =>
+		CreateMayBeCompletedRule(
+			ruleId,
+			targetTypeFullName,
+			completeMethodName,
+			CreateLocalizableResourceString(nameof(CompleteObjectsBeforeLosingScopeTitle), targetTypeFullName, completeMethodName),
+			CreateLocalizableResourceString(nameof(CompleteObjectsBeforeLosingScopeDescription), targetTypeFullName, completeMethodName)
+		);
+
+	private static DiagnosticDescriptor CreateMayBeCompletedRule(string ruleId, string targetTypeFullName, string completeMethodName, LocalizableString title, LocalizableString description) =>
+							DiagnosticDescriptorHelper.Create(
+					ruleId,
+					title,
+					CreateLocalizableResourceString(nameof(CompleteObjectsBeforeLosingScopeNotCompletedMessage), targetTypeFullName, completeMethodName),
+					DiagnosticCategory.Reliability,
+					RuleLevel.Disabled,
+					description: description,
+					isPortedFxCopRule: true,
+					isDataflowRule: true
+				);
 
 	private static LocalizableResourceString CreateLocalizableResourceString(string nameOfLocalizableResource)
 		=> new(nameOfLocalizableResource, ResourceManager, typeof(Resources));

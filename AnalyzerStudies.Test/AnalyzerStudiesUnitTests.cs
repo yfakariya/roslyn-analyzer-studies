@@ -1,16 +1,16 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System.Threading.Tasks;
 using VerifyCS = AnalyzerStudies.Test.CSharpCodeFixVerifier<
-    AnalyzerStudies.AnalyzerStudiesAnalyzer,
-    AnalyzerStudies.AnalyzerStudiesCodeFixProvider>;
+	AnalyzerStudies.AnalyzerStudiesAnalyzer,
+	AnalyzerStudies.AnalyzerStudiesCodeFixProvider>;
 
 namespace AnalyzerStudies.Test
 {
-    [TestClass]
+	[TestFixture]
     public class AnalyzerStudiesUnitTest
     {
         //No diagnostics expected to show up
-        [TestMethod]
+        [Test]
         public async Task TestMethod1()
         {
             var test = @"";
@@ -19,7 +19,7 @@ namespace AnalyzerStudies.Test
         }
 
         //Diagnostic and CodeFix both triggered and checked for
-        [TestMethod]
+        [Test]
         public async Task TestMethod2()
         {
             var test = @"
