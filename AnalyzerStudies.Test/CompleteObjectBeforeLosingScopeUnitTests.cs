@@ -5,8 +5,7 @@
 using System.Threading.Tasks;
 using NUnit.Framework;
 
-using VerifyCS = AnalyzerStudies.Test.CSharpAnalyzerVerifier<
-	AnalyzerStudies.Test.CompleteTransactionScopeBeforeLosingScope>;
+using VerifyCS = AnalyzerStudies.Test.CSharpAnalyzerVerifier<AnalyzerStudies.CompleteTransactionScopeBeforeLosingScope>;
 
 namespace AnalyzerStudies.Test;
 
@@ -19,7 +18,7 @@ public class CompleteObjectBeforeLosingScopeUnitTests
 	{
 		var test = @"";
 
-		await VerifyCS.VerifyAnalyzerAsync(test);
+		await VerifyCS.VerifyAnalyzerAsync(test).ConfigureAwait(false);
 	}
 
 	[Test]
@@ -41,9 +40,8 @@ namespace ConsoleApplication1
 		}
 	}
 }";
-		await VerifyCS.VerifyAnalyzerAsync(test);
+		await VerifyCS.VerifyAnalyzerAsync(test).ConfigureAwait(false);
 	}
-
 
 	[Test]
 	public async Task WithTarget_NotCompleted_NG()
@@ -68,7 +66,7 @@ namespace ConsoleApplication1
 			CompleteObjectBeforeLosingScope.CreateNotCompatibleRule("XA0001", "System.Transactions.TransactionScope", "Complete"))
 			.WithSpan(9, 23, 9, 45)
 			.WithArguments("new TransactionScope()");
-		await VerifyCS.VerifyAnalyzerAsync(test, expected);
+		await VerifyCS.VerifyAnalyzerAsync(test, expected).ConfigureAwait(false);
 	}
 
 	[Test]
@@ -101,7 +99,7 @@ namespace ConsoleApplication1
 	}
 }
 """;
-		await VerifyCS.VerifyAnalyzerAsync(test);
+		await VerifyCS.VerifyAnalyzerAsync(test).ConfigureAwait(false);
 	}
 
 	// TODO: type / method resolution failure

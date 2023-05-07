@@ -1,0 +1,17 @@
+# EditorConfig is awesome: http://EditorConfig.org
+
+# top-most EditorConfig file
+root = false
+
+# Relax for copied files
+[Utilities/**/*.cs]
+dotnet_diagnostic.IDE0017.severity = none
+dotnet_diagnostic.IDE0055.severity = none
+dotnet_diagnostic.IDE0065.severity = none
+dotnet_diagnostic.IDE0260.severity = none
+dotnet_diagnostic.IDE1006.severity = none
+dotnet_diagnostic.IDE2000.severity = none
+dotnet_diagnostic.IDE2005.severity = none
+dotnet_diagnostic.IDE2006.severity = none
+
+dotnet_diagnostic.RS1024.severity = none

@@ -25,7 +25,7 @@ using CompleteOnNormalPathAnalysisDomain =
 
 namespace AnalyzerStudies.CompletionOnNormalPathAnalysis;
 
-partial class CompleteOnNormalPathAnalysis
+public partial class CompleteOnNormalPathAnalysis
 {
 	/// <summary>
 	/// Operation visitor to flow the target values across a given statement in a basic block.
@@ -75,9 +75,9 @@ partial class CompleteOnNormalPathAnalysis
 			=> CompleteOnNormalPathAbstractValue.NonTarget;
 
 		protected override CompleteOnNormalPathAbstractValue GetAbstractValue(AbstractLocation location)
-			=> CurrentAnalysisData.TryGetValue(location, out var value) ?
-				value :
-				ValueDomain.UnknownOrMayBeValue;
+			=> CurrentAnalysisData.TryGetValue(location, out var value)
+				? value
+				: ValueDomain.UnknownOrMayBeValue;
 
 		protected override bool HasAnyAbstractValue(CompleteOnNormalPathAnalysisData data)
 			=> data.Count > 0;

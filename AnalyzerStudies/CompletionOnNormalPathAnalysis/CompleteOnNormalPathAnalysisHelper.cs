@@ -3,11 +3,9 @@
 // See the LICENSE in the project root for more information.
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Threading;
 using Analyzer.Utilities;
 using Analyzer.Utilities.Extensions;
 using Microsoft.CodeAnalysis;
@@ -15,7 +13,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.FlowAnalysis.DataFlow;
 using Microsoft.CodeAnalysis.FlowAnalysis.DataFlow.PointsToAnalysis;
 using Microsoft.CodeAnalysis.Operations;
-using KeyType = System.Tuple<Microsoft.CodeAnalysis.Compilation, System.String, System.String>;
+using KeyType = System.Tuple<Microsoft.CodeAnalysis.Compilation, string, string>;
 
 namespace AnalyzerStudies.CompletionOnNormalPathAnalysis;
 
@@ -31,26 +29,15 @@ internal sealed class CompleteOnNormalPathAnalysisHelper
 
 	private readonly WellKnownTypeProvider _wellKnownTypeProvider;
 
-	private ConcurrentDictionary<INamedTypeSymbol, ImmutableHashSet<IFieldSymbol>>? _lazyDisposableFieldsMap;
-
 	public INamedTypeSymbol? TargetType { get; }
 
 	public IMethodSymbol? CompleteMethod { get; }
-
 
 	private CompleteOnNormalPathAnalysisHelper(Compilation compilation, string targetTypeFullName, string completeMethodName)
 	{
 		_wellKnownTypeProvider = WellKnownTypeProvider.GetOrCreate(compilation);
 		TargetType = _wellKnownTypeProvider.GetOrCreateTypeByMetadataName(targetTypeFullName);
 		CompleteMethod = TargetType?.GetMembers(completeMethodName).Where(m => m.Kind == SymbolKind.Method && !m.IsStatic).OfType<IMethodSymbol>().FirstOrDefault();
-	}
-
-	private void EnsureCompletableFieldsMap()
-	{
-		if (_lazyDisposableFieldsMap == null)
-		{
-			Interlocked.CompareExchange(ref _lazyDisposableFieldsMap, new ConcurrentDictionary<INamedTypeSymbol, ImmutableHashSet<IFieldSymbol>>(), null);
-		}
 	}
 
 	public static bool TryGetOrCreate(

@@ -1,4 +1,4 @@
-﻿// Copyright (c) FUJIWARA, Yusuke and all contributors.
+// Copyright (c) FUJIWARA, Yusuke and all contributors.
 // This file is licensed under MIT license.
 // See the LICENSE in the project root for more information.
 
@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.FlowAnalysis.DataFlow;
 
 namespace AnalyzerStudies.CompletionOnNormalPathAnalysis;
 
-partial class CompleteOnNormalPathAnalysis
+public partial class CompleteOnNormalPathAnalysis
 {
 	/// <summary>
 	/// Abstract value domain for <see cref="CompleteOnNormalPathAnalysis"/> to merge and compare <see cref="CompleteOnNormalPathAbstractValue"/> values.
@@ -18,7 +18,6 @@ partial class CompleteOnNormalPathAnalysis
 		public static CompleteOnNormalPathAbstractValueDomain Default = new();
 
 		private readonly SetAbstractDomain<IOperation> _completionOperationsDomain = SetAbstractDomain<IOperation>.Default;
-
 
 		public override CompleteOnNormalPathAbstractValue UnknownOrMayBeValue => CompleteOnNormalPathAbstractValue.Unknown;
 

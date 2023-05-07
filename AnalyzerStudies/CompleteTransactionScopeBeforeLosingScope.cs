@@ -2,10 +2,10 @@
 // This file is licensed under MIT license.
 // See the LICENSE in the project root for more information.
 
-using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace AnalyzerStudies.Test;
+namespace AnalyzerStudies;
 
 /// <summary>
 /// Implementatino of <see cref="CompleteObjectBeforeLosingScope"/> for testing.

@@ -46,7 +46,6 @@ public sealed partial class CompleteOnNormalPathAnalysis :
 	{
 	}
 
-
 	public static CompleteOnNormalPathAnalysisResult? TryGetOrComputeResult(
 		ControlFlowGraph cfg,
 		ISymbol owningSymbol,
@@ -151,9 +150,9 @@ public sealed partial class CompleteOnNormalPathAnalysis :
 	{
 		var operationVisitor = (CompleteOnNormalPathDataFlowOperationVisitor)OperationVisitor;
 		var trackedInstanceFieldPointsToMap =
-			analysisContext.TrackInstanceFields ?
-			operationVisitor.TrackedInstanceFieldPointsToMap :
-			null;
+			analysisContext.TrackInstanceFields
+			? operationVisitor.TrackedInstanceFieldPointsToMap
+			: null;
 		return new CompleteOnNormalPathAnalysisResult(dataFlowAnalysisResult, trackedInstanceFieldPointsToMap);
 	}
 

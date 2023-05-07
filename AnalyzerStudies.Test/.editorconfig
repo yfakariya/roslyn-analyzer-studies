@@ -1,0 +1,7 @@
+# EditorConfig is awesome: http://EditorConfig.org
+
+# top-most EditorConfig file
+root = false
+
+# .ConfigureAwait() is not needed in test proj
+dotnet_diagnostic.CA2007.severity = none
