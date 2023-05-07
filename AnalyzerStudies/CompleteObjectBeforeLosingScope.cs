@@ -36,9 +36,6 @@ public abstract class CompleteObjectBeforeLosingScope : DiagnosticAnalyzer
 
 	internal DiagnosticDescriptor NotCompletedRule { get; }
 
-	[Obsolete] // FIXME: May be unusable
-	internal DiagnosticDescriptor MayBeCompletedRule { get; }
-
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; }
 
 	public string TargetTypeFullName { get; }
@@ -53,13 +50,12 @@ public abstract class CompleteObjectBeforeLosingScope : DiagnosticAnalyzer
 		_localizableTitle = CreateLocalizableResourceString(nameof(CompleteObjectsBeforeLosingScopeTitle), targetTypeFullName, completeMethodName);
 		_localizableDescription = CreateLocalizableResourceString(nameof(CompleteObjectsBeforeLosingScopeDescription), targetTypeFullName, completeMethodName);
 		NotCompletedRule = CreateNotCompatibleRule(ruleId, targetTypeFullName, completeMethodName, _localizableTitle, _localizableDescription);
-		MayBeCompletedRule = CreateMayBeCompletedRule(ruleId, targetTypeFullName, completeMethodName, _localizableTitle, _localizableDescription);
 
-		SupportedDiagnostics = ImmutableArray.Create(NotCompletedRule, MayBeCompletedRule);
+		SupportedDiagnostics = ImmutableArray.Create(NotCompletedRule);
 	}
 
-	internal static DiagnosticDescriptor CreateNotCompatibleRule(string ruleId, string targetTypeFullName, string completeMethodName) =>
-		CreateNotCompatibleRule(
+	internal static DiagnosticDescriptor CreateNotCompatibleRule(string ruleId, string targetTypeFullName, string completeMethodName)
+		=> CreateNotCompatibleRule(
 			ruleId,
 			targetTypeFullName,
 			completeMethodName,
@@ -67,20 +63,20 @@ public abstract class CompleteObjectBeforeLosingScope : DiagnosticAnalyzer
 			CreateLocalizableResourceString(nameof(CompleteObjectsBeforeLosingScopeDescription), targetTypeFullName, completeMethodName)
 		);
 
-	private static DiagnosticDescriptor CreateNotCompatibleRule(string ruleId, string targetTypeFullName, string completeMethodName, LocalizableString title, LocalizableString description) =>
-							DiagnosticDescriptorHelper.Create(
-					ruleId,
-					title,
-					CreateLocalizableResourceString(nameof(CompleteObjectsBeforeLosingScopeNotCompletedMessage), targetTypeFullName, completeMethodName),
-					DiagnosticCategory.Reliability,
-					RuleLevel.Disabled,
-					description: description,
-					isPortedFxCopRule: true,
-					isDataflowRule: true
-				);
+	private static DiagnosticDescriptor CreateNotCompatibleRule(string ruleId, string targetTypeFullName, string completeMethodName, LocalizableString title, LocalizableString description)
+		=> DiagnosticDescriptorHelper.Create(
+			ruleId,
+			title,
+			CreateLocalizableResourceString(nameof(CompleteObjectsBeforeLosingScopeNotCompletedMessage), targetTypeFullName, completeMethodName),
+			DiagnosticCategory.Reliability,
+			RuleLevel.Disabled,
+			description: description,
+			isPortedFxCopRule: true,
+			isDataflowRule: true
+		);
 
-	internal static DiagnosticDescriptor CreateMayBeCompletedRule(string ruleId, string targetTypeFullName, string completeMethodName) =>
-		CreateMayBeCompletedRule(
+	internal static DiagnosticDescriptor CreateMayBeCompletedRule(string ruleId, string targetTypeFullName, string completeMethodName)
+		=> CreateMayBeCompletedRule(
 			ruleId,
 			targetTypeFullName,
 			completeMethodName,
@@ -88,20 +84,17 @@ public abstract class CompleteObjectBeforeLosingScope : DiagnosticAnalyzer
 			CreateLocalizableResourceString(nameof(CompleteObjectsBeforeLosingScopeDescription), targetTypeFullName, completeMethodName)
 		);
 
-	private static DiagnosticDescriptor CreateMayBeCompletedRule(string ruleId, string targetTypeFullName, string completeMethodName, LocalizableString title, LocalizableString description) =>
-							DiagnosticDescriptorHelper.Create(
-					ruleId,
-					title,
-					CreateLocalizableResourceString(nameof(CompleteObjectsBeforeLosingScopeNotCompletedMessage), targetTypeFullName, completeMethodName),
-					DiagnosticCategory.Reliability,
-					RuleLevel.Disabled,
-					description: description,
-					isPortedFxCopRule: true,
-					isDataflowRule: true
-				);
-
-	private static LocalizableResourceString CreateLocalizableResourceString(string nameOfLocalizableResource)
-		=> new(nameOfLocalizableResource, ResourceManager, typeof(Resources));
+	private static DiagnosticDescriptor CreateMayBeCompletedRule(string ruleId, string targetTypeFullName, string completeMethodName, LocalizableString title, LocalizableString description)
+		=> DiagnosticDescriptorHelper.Create(
+			ruleId,
+			title,
+			CreateLocalizableResourceString(nameof(CompleteObjectsBeforeLosingScopeNotCompletedMessage), targetTypeFullName, completeMethodName),
+			DiagnosticCategory.Reliability,
+			RuleLevel.Disabled,
+			description: description,
+			isPortedFxCopRule: true,
+			isDataflowRule: true
+		);
 
 	private static LocalizableResourceString CreateLocalizableResourceString(string nameOfLocalizableResource, params string[] formatArguments)
 		=> new(nameOfLocalizableResource, ResourceManager, typeof(Resources), formatArguments);
@@ -127,9 +120,6 @@ public abstract class CompleteObjectBeforeLosingScope : DiagnosticAnalyzer
 					return;
 				}
 
-				var completionAnalysisKind = operationBlockContext.Options.GetCompleteOnNormalPathAnalysisKindOption(NotCompletedRule, containingMethod,
-					operationBlockContext.Compilation, CompletionAnalysisKind.NonExceptionPaths);
-
 				// For non-exception paths analysis, we can skip interprocedural analysis for certain invocations.
 				var interproceduralAnalysisPredicate =
 					new InterproceduralAnalysisPredicate(
@@ -149,15 +139,14 @@ public abstract class CompleteObjectBeforeLosingScope : DiagnosticAnalyzer
 					var exitBlock = completeOnNormalPathAnalysisResult.ControlFlowGraph.GetExit();
 					var completeDataAtExit = completeOnNormalPathAnalysisResult.ExitBlockOutput.Data;
 					ComputeDiagnostics(completeDataAtExit,
-						notCompletedDiagnostics, mayBeNotCompletedDiagnostics, completeOnNormalPathAnalysisResult, pointsToAnalysisResult,
-						completionAnalysisKind);
+						notCompletedDiagnostics, mayBeNotCompletedDiagnostics, completeOnNormalPathAnalysisResult, pointsToAnalysisResult);
 
 					if (!notCompletedDiagnostics.Any() && !mayBeNotCompletedDiagnostics.Any())
 					{
 						return;
 					}
 
-					// Report diagnostics preferring *not* disposed diagnostics over may be not disposed diagnostics
+					// Report diagnostics preferring *not* completed diagnostics over may be not completed diagnostics
 					// and avoiding duplicates.
 					foreach (var diagnostic in notCompletedDiagnostics.Concat(mayBeNotCompletedDiagnostics))
 					{
@@ -209,8 +198,7 @@ public abstract class CompleteObjectBeforeLosingScope : DiagnosticAnalyzer
 		ArrayBuilder<Diagnostic> notCompletedDiagnostics,
 		ArrayBuilder<Diagnostic> mayBeNotCompletedDiagnostics,
 		CompleteOnNormalPathAnalysisResult completeOnNormalPathAnalysisResult,
-		PointsToAnalysisResult pointsToAnalysisResult,
-		CompletionAnalysisKind completeAnalysisKind)
+		PointsToAnalysisResult pointsToAnalysisResult)
 	{
 		foreach (var kvp in completeOnNormalPathData)
 		{
@@ -227,16 +215,13 @@ public abstract class CompleteObjectBeforeLosingScope : DiagnosticAnalyzer
 				 completeValue.CompletingOrEscapingOperations.All(d => d.IsInsideCatchRegion(completeOnNormalPathAnalysisResult.ControlFlowGraph) && !location.GetTopOfCreationCallStackOrCreation().IsInsideCatchRegion(completeOnNormalPathAnalysisResult.ControlFlowGraph)));
 			var isMayBeNotCompleted = !isNotCompleted && (completeValue.Kind == CompleteOnNormalPathAbstractValueKind.MaybeCompleted || completeValue.Kind == CompleteOnNormalPathAbstractValueKind.NotCompletedOrEscaped);
 
-			if (isNotCompleted ||
-				(isMayBeNotCompleted && completeAnalysisKind.AreMayBeNotCompletedViolationsEnabled()))
+			if (isNotCompleted || isMayBeNotCompleted)
 			{
 				var syntax = location.TryGetNodeToReportDiagnostic(pointsToAnalysisResult);
 				if (syntax == null)
 				{
 					continue;
 				}
-
-				var rule = GetRule(isNotCompleted);
 
 				// Ensure that we do not include multiple lines for the object creation expression in the diagnostic message.
 				var argument = syntax.ToString();
@@ -246,7 +231,7 @@ public abstract class CompleteObjectBeforeLosingScope : DiagnosticAnalyzer
 					argument = argument[..indexOfNewLine];
 				}
 
-				var diagnostic = syntax.CreateDiagnostic(rule, argument);
+				var diagnostic = syntax.CreateDiagnostic(NotCompletedRule, argument);
 				if (isNotCompleted)
 				{
 					notCompletedDiagnostics.Add(diagnostic);
@@ -257,9 +242,5 @@ public abstract class CompleteObjectBeforeLosingScope : DiagnosticAnalyzer
 				}
 			}
 		}
-
-		// Local functions.
-		DiagnosticDescriptor GetRule(bool isNotCompleted)
-			=> isNotCompleted ? NotCompletedRule : MayBeCompletedRule;
 	}
 }
