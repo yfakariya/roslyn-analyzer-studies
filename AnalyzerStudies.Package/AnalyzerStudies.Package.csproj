@@ -8,18 +8,18 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageId>AnalyzerStudies</PackageId>
+    <PackageId>YOUR_PACKAGE_ID</PackageId>
     <PackageVersion>1.0.0.0</PackageVersion>
-    <Authors>Yusuke</Authors>
+    <Authors>YOUR_NAME_HERE</Authors>
     <PackageLicenseUrl>http://LICENSE_URL_HERE_OR_DELETE_THIS_LINE</PackageLicenseUrl>
     <PackageProjectUrl>http://PROJECT_URL_HERE_OR_DELETE_THIS_LINE</PackageProjectUrl>
     <PackageIconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</PackageIconUrl>
     <RepositoryUrl>http://REPOSITORY_URL_HERE_OR_DELETE_THIS_LINE</RepositoryUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Description>AnalyzerStudies</Description>
-    <PackageReleaseNotes>Summary of changes made in this release of the package.</PackageReleaseNotes>
-    <Copyright>Copyright</Copyright>
-    <PackageTags>AnalyzerStudies, analyzers</PackageTags>
+    <Description>DESCRIPTION_HERE</Description>
+    <PackageReleaseNotes>DESCRIBE_RELEASE_NOTE_HERE</PackageReleaseNotes>
+    <Copyright>COPYRIGHT_NOTICE_HERE</Copyright>
+    <PackageTags>analyzers</PackageTags>
     <DevelopmentDependency>true</DevelopmentDependency>
     <NoPackageAnalysis>true</NoPackageAnalysis>
 
@@ -27,8 +27,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AnalyzerStudies.CodeFixes\AnalyzerStudies.CodeFixes.csproj" />
     <ProjectReference Include="..\AnalyzerStudies\AnalyzerStudies.csproj" />
+    <!--
+    <ProjectReference Include="..\AnalyzerStudies\AnalyzerStudies.CodeFixes.csproj" />
+    -->
   </ItemGroup>
 
   <ItemGroup>
@@ -38,7 +40,9 @@
   <Target Name="_AddAnalyzersToOutput">
     <ItemGroup>
       <TfmSpecificPackageFile Include="$(OutputPath)\AnalyzerStudies.dll" PackagePath="analyzers/dotnet/cs" />
+      <!--
       <TfmSpecificPackageFile Include="$(OutputPath)\AnalyzerStudies.CodeFixes.dll" PackagePath="analyzers/dotnet/cs" />
+      -->
     </ItemGroup>
   </Target>
 
